@@ -1,5 +1,6 @@
 # Hypedbot.py
 import os
+from webserver import keep_alive
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -31,6 +32,10 @@ async def on_member_join(member):
         f'Hi {member.name}, welcome to {guild.name} server!'
     )
 
-if __name__ == '__main__':
+def main():
     load_cogs()
+    keep_alive()
     bot.run(TOKEN)
+    
+if __name__ == '__main__':
+    main()
