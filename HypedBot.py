@@ -1,8 +1,12 @@
 # Hypedbot.py
 import os
+from turtle import color
+import discord
+from flask import Blueprint
 from webserver import keep_alive
 from discord.ext import commands
 from dotenv import load_dotenv
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -21,16 +25,6 @@ def load_cogs():
             except Exception as e:
                 print(f'Failed to load extension {filename}.')
                 print(e)
-
-@bot.event
-async def on_member_join(member):
-    for guild in bot.guilds:
-        if guild.name == GUILD:
-            break
-    dm_channel = await member.create_dm()
-    await dm_channel.send(
-        f'Hi {member.name}, welcome to {guild.name} server!'
-    )
 
 def main():
     load_cogs()
