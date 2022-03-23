@@ -3,6 +3,7 @@ import json
 import requests
 from discord.ext import commands
 import aiohttp
+
  
 class weather(commands.Cog):
     def __init__(self, bot):
@@ -10,7 +11,7 @@ class weather(commands.Cog):
     @commands.command(name='weather', help='Gets the weather for a given city')
     async def weather(self, ctx, city: str):
         async with aiohttp.ClientSession() as session:
-            with open("HypedBot\config.json", "r") as jsonfile:
+            with open("Hypedbot/settings/weather_config.json", "r") as jsonfile:
                 data = json.load(jsonfile)
                 weather_api_key = data["weather_api_key"]
                 base_url = data["weather_url"]
