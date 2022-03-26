@@ -1,17 +1,17 @@
-from sqlite3 import Timestamp
-from glob import glob
-from discord import Intents
-from datetime import datetime
-from discord import Color
-from discord import Embed
-from discord.ext.commands import CommandNotFound
-from discord.ext.commands import Bot as _Bot
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from isort import file
-from ..db import db
 import os
+from asyncio import sleep
+from datetime import datetime
+from glob import glob
+from sqlite3 import Timestamp
+from time import sleep
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from discord import Color, Embed, Intents, file
+from discord.ext.commands import Bot as _Bot
+from discord.ext.commands import CommandNotFound
+from isort import file
 
+from ..db import db
 
 PREFIX = "&"
 OWNER_IDS = []
@@ -25,11 +25,15 @@ class Ready(object):
     def ready_cog(self, cog):
         setattr(self, cog, True)
         print (f"{cog} is ready")
+    
+    def all_ready(self):
+        return all(getattr(self, cog) for cog in COGS)
 
 class Bot(_Bot):
     def __init__(self):
         self.PREFIX = PREFIX
         self.ready = False
+        self.cogs_ready = Ready()
         self.guild = None
         self.scheduler = AsyncIOScheduler()
         db.autosave(self.scheduler)
@@ -85,7 +89,7 @@ class Bot(_Bot):
                 color=Color.blue(),
                 timestamp = datetime.utcnow()
             )
-            fields = [('Author', 'Author', True),
+            fields = [('Author', 'HypedPanther', True),
             ('Name', 'HypedBot', True),
             ('Status', 'Experimental', False ),]
 
@@ -97,8 +101,8 @@ class Bot(_Bot):
             embed.set_image(url=self.guild.icon_url)
             await self.stdout.send(embed=embed)
 
-            #await channel.send(file=file("./data/images/hypedbot.png"))
-            
+            while not self.cogs_ready.all_ready():
+                await sleep(1)
             self.ready = True
             print(f'bot is ready!' )
         
@@ -106,7 +110,9 @@ class Bot(_Bot):
             print(f'bot is reconnected!')  
 
     async def on_message(self, message):
-        pass
+        if not message.author.bot:
+            await self.process_commands(message)
+
     async def on_error(self, err, *args, **kwargs):
         if err == 'on_comand_error':
             await args[0].send(f'Something has gone wrong!')
