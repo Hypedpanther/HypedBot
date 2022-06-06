@@ -79,8 +79,8 @@ class Bot(_Bot):
         if not self.ready:
            
             self.scheduler.start()
-            self.guild = self.get_guild()
-            self.stdout = self.get_channel()
+            self.guild = self.get_guild(947913659840086076)
+            self.stdout = self.get_channel(947913659840086079)
             await self.stdout.send(f'I am now online!')
 
             embed = Embed(

@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-class Log(commands.Cog):
+class err_log(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -27,4 +27,4 @@ class Log(commands.Cog):
             raise error
 
 def setup(bot):
-    bot.add_cog(Log(bot))
+    bot.add_cog(err_log(bot))
